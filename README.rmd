@@ -37,7 +37,8 @@ Fora do horário de aula ou monitoria:
 ## Slides
 
 ```{r, echo = FALSE}
-main_repo <- "main-intro-ml"
+library(magrittr)
+main_repo <- "202108-intro-ml"
 knitr::kable(
   tibble::tibble(
     slide = CursoRutils:::list_github_files(main_repo, "slides/", "\\.html"),
@@ -49,13 +50,6 @@ knitr::kable(
 
 ## Referências externas
 
-#### Programação em R
-
-- [Livro da Curso-R (Curso-R)](https://livro.curso-r.com/)
-- [Tidyverse (Wickham H)](https://www.tidyverse.org/)
-- [R for Data Science (Wickham H)](https://r4ds.had.co.nz/)
-- [Advanced R (Wickham H)](https://adv-r.hadley.nz/)
-
 #### Machine Learning
 
 - [Introduction to Statistical Learning (Hastie, et al)](http://faculty.marshall.usc.edu/gareth-james/ISL/ISLR%20Seventh%20Printing.pdf)
@@ -64,6 +58,13 @@ knitr::kable(
 - [Tidymodels (Kuhn, et al)](https://www.tidymodels.org/)
 - [Feature Engineering and Selection: A Practical Approach for Predictive Models (Kuhn, Kjell)](http://www.feat.engineering/)
 - [Kaggle](https://www.kaggle.com/)
+
+#### Programação em R
+
+- [Livro da Curso-R (Curso-R)](https://livro.curso-r.com/)
+- [Tidyverse (Wickham H)](https://www.tidyverse.org/)
+- [R for Data Science (Wickham H)](https://r4ds.had.co.nz/)
+- [Advanced R (Wickham H)](https://adv-r.hadley.nz/)
 
 #### Miscelânea
 
