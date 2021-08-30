@@ -1203,6 +1203,19 @@ Colocamos um $\hat{}$ em cima dos termos para representar "estimativas". Ou seja
 ```
 
 ---
+
+## Tidymodels
+
+- Conjunto de pacotes/framework para desenvolvimento de modelos preditivos. Muitos tutoriais e guias no [site](https://www.tidymodels.org/).
+
+- Em desenvolvimento ativo pela RStudio. Possui muitas semelhanças com o 'tidyverse' o que faz com que mais prático.
+
+- Unifica o uso dos modelos já existentes no R. Ele é também extensível: você pode implementar um novo modelo
+que funcione com o tidymodels.
+
+- Alternativas: [{caret}](https://topepo.github.io/caret/), [{mlr3}](https://mlr3.mlr-org.com/), [{scikit-learn}](https://scikit-learn.org/stable/) (Python), [{PyCaret}](https://pycaret.org/) (Python). Em geral é fácil migrar de um framework p/ o outro - a parte mais difícil é aprender o fluxo de trabalho de **machine learning**.
+
+---
 class: middle, center
 
 ## Exemplo 01
@@ -1434,24 +1447,6 @@ palavra-chave: **data leakage** ou **vazamento de informação**
 
 ---
 
-## Dados novos vs antigos
-
-
-```{r, eval = TRUE}
-df <- tribble(
-  ~grau_do_polinomio, ~rmse_treino, ~rmse_teste,
-  "1", 230.01, 310.3
-)
-
-df %>%
-  kable(format = "html")
-```
-
-
-
-
----
-
 ## Regularização
 
 **Objetivo da Regularização:** Oferecer um parâmetro (um valor que podemos mudar) para termos controle sobre a **complexidade** da $f(x)$ e assim  evitar o *sobreajuste*.
@@ -1480,6 +1475,15 @@ Ou seja, **penalizamos** a função de custo se os $\beta's$ forem muito grandes
 
 ## Regularização - LASSO
 
+Vamos testar diversos valores para $\color{red}{\lambda}$ até encontrar o que dá o menor erro de teste.
+
+<img src='static/img/lasso_lambda2.png' width = 70%>
+
+
+---
+
+## Regularização - LASSO
+
 Conforme aumentamos o $\color{red}{\lambda}$, forçamos os $\beta's$ a serem cada vez menores.
 
 
@@ -1489,20 +1493,6 @@ Conforme aumentamos o $\color{red}{\lambda}$, forçamos os $\beta's$ a serem cad
 .footnote[
 Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 219 (The LASSO).
 ]
-
----
-
-## Regularização - LASSO
-
-Vamos testar diversos valores para $\color{red}{\lambda}$ até encontrar o que dá o menor erro de teste.
-
-
-![scatter_eqm](static/img/lasso_lambda.png)
-
-.footnote[
-Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 219 (The LASSO).
-]
-
 
 ---
 
@@ -1530,7 +1520,7 @@ linear_reg(penalty = tune())
 
 ## Problema!
 
-Teremos que testar muitos 'lambdas'. Podemos desgastar a base de teste (erro de teste vai ter alta variabilidade). Para isso, inventaram a estratégia de reamostragem que oferece uma estimativa do erro de predição (erro de teste) com menor variabilidade.
+Teremos que testar muitos 'lambdas'. Podemos desgastar a base de teste (erro de teste vai ter alta variabilidade). Para isso, inventaram a estratégia de reamostragem que oferece uma estimativa do erro de predição (erro de teste) de forma mais confiável.
 
 
 ---
@@ -1600,6 +1590,25 @@ Fonte: [bookdown.org/max/FES/resampling.html](https://bookdown.org/max/FES/resam
 ]
 
 ---
+
+# Cross-validation (validação cruzada)
+
+Em pseudo-código:
+
+```
+K <- 5
+
+fold <- sample.int(K, nrow(mtcars), replace = TRUE)
+for (k in 1:K) {
+  train <- mtcars[fold != k,]
+  valid <- mtcars[fold == k,]
+  
+  # ajusta_modelo(train)
+  # metrics(valid)
+}
+```
+
+---
 class: middle, center
 
 ## Exemplo 03
@@ -1618,6 +1627,24 @@ Também é possível misturar os dois
 $$RMSE_{regularizado} = RMSE + (\alpha) \times \color{red}{\lambda}\sum_{j = 1}^{p}|\beta_j| + (1 - \alpha) \times \color{red}{\lambda}\sum_{j = 1}^{p}\beta_j^2$$
 
 Nessa definição $\alpha$ é chamado de 'mixture' (mistura). Quando $\alpha=1$ temos o LASSO e quando $\alpha=0$ temos Ridge. O $\alpha$ também pode ser tunado.
+
+---
+
+## Ridge vs LASSO
+
+O LASSO tem uma propriedade muito interessante quando
+comparada ao Ridge. Por razões matemáticas, ele consegue produzir estamativas esparsas, isto é, alguns coeficientes podem ser exatamente 0.
+
+<img src="static/img/ridge-vs-lasso.png" width = "45%">
+
+.footnote[
+ Fonte: [ISLR pag. 224](https://web.stanford.edu/~hastie/ISLRv2_website.pdf)
+]
+
+---
+class: middle, center
+
+## Exercício 01
 
 ---
 

@@ -29,7 +29,6 @@ ajuste_modelo1 <- especificacao_modelo %>%
 ajuste_modelo2 <- especificacao_modelo %>%
   fit(price ~ poly(x, 20), data = diamondsinho)
 
-
 # predicoes ---------------------------------------------------------------
 diamondsinho_com_previsao <- diamondsinho %>%
   mutate(
@@ -58,8 +57,8 @@ diamondsinho_com_previsao_longo %>%
 diamondsinho_com_previsao_g1 <- diamondsinho_com_previsao %>%
   ggplot() +
   geom_point(aes(x, price), size = 3) +
-  geom_point(aes(x, price_pred2, color = 'modelo2'), size = 1) +
-  geom_point(aes(x, price_pred1, color = 'modelo1'), size = 1) +
+  geom_line(aes(x, price_pred2, color = 'modelo2'), size = 1) +
+  geom_line(aes(x, price_pred1, color = 'modelo1'), size = 1) +
   theme_bw()
 diamondsinho_com_previsao_g1
 
@@ -132,8 +131,8 @@ diamondsinho_novos_com_previsao_longo %>%
 diamondsinho_novos_com_previsao_g1 <- diamondsinho_novos_com_previsao %>%
   ggplot() +
   geom_point(aes(x, price), size = 3) +
-  geom_point(aes(x, price_pred2, color = 'modelo2'), size = 1) +
-  geom_point(aes(x, price_pred1, color = 'modelo1'), size = 1) +
+  geom_line(aes(x, price_pred2, color = 'modelo2'), size = 1) +
+  geom_line(aes(x, price_pred1, color = 'modelo1'), size = 1) +
   theme_bw()
 diamondsinho_com_previsao_g1 / diamondsinho_novos_com_previsao_g1
 
@@ -166,3 +165,4 @@ diamondsinho_novos_com_previsao_g3 <- diamondsinho_novos_com_previsao %>%
   labs(y = "resíduo (y - y_chapeu)") +
   theme_bw()
 diamondsinho_com_previsao_g3 / diamondsinho_novos_com_previsao_g3
+
