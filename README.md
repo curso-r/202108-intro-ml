@@ -27,10 +27,10 @@ Fora do horário de aula ou monitoria:
 
 ## Slides
 
-| slide               | link                                                            |
-|:--------------------|:----------------------------------------------------------------|
-| 00-intro-curso.html | <https://curso-r.github.io/202108-intro-ml/00-intro-curso.html> |
-| 01-intro-ml.html    | <https://curso-r.github.io/202108-intro-ml/01-intro-ml.html>    |
+| slide               | link                                                                   |
+|:--------------------|:-----------------------------------------------------------------------|
+| 00-intro-curso.html | <https://curso-r.github.io/202108-intro-ml/slides/00-intro-curso.html> |
+| 01-intro-ml.html    | <https://curso-r.github.io/202108-intro-ml/slides/01-intro-ml.html>    |
 
 ## Referências externas
 
