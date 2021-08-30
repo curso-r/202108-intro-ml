@@ -37,14 +37,14 @@ Fora do horário de aula ou monitoria:
 ## Slides
 
 ```{r, echo = FALSE}
-library(magrittr)
 main_repo <- "202108-intro-ml"
 knitr::kable(
   tibble::tibble(
-    slide = CursoRutils:::list_github_files(main_repo, "slides/", "\\.html"),
+    slide = list.files("slides/", "\\.html"),
     link = paste0("https://curso-r.github.io/", main_repo, "/", slide)
   ) %>% 
-    dplyr::filter(!stringr::str_detect(slide, "_files/"))
+    dplyr::filter(!stringr::str_detect(slide, "_files/")) %>% 
+    dplyr::slice(1:2)
 )
 ```
 

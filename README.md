@@ -27,21 +27,12 @@ Fora do horário de aula ou monitoria:
 
 ## Slides
 
-| slide                             | link                                                                        |
-|:----------------------------------|:----------------------------------------------------------------------------|
-| slides/00-intro-curso.html        | <https://curso-r.github.io/main-intro-ml/slides/00-intro-curso.html>        |
-| slides/01-intro-ml.html           | <https://curso-r.github.io/main-intro-ml/slides/01-intro-ml.html>           |
-| slides/03-modelos-de-arvores.html | <https://curso-r.github.io/main-intro-ml/slides/03-modelos-de-arvores.html> |
-| slides/04-dataprep.html           | <https://curso-r.github.io/main-intro-ml/slides/04-dataprep.html>           |
+| slide               | link                                                            |
+|:--------------------|:----------------------------------------------------------------|
+| 00-intro-curso.html | <https://curso-r.github.io/202108-intro-ml/00-intro-curso.html> |
+| 01-intro-ml.html    | <https://curso-r.github.io/202108-intro-ml/01-intro-ml.html>    |
 
 ## Referências externas
-
-#### Programação em R
-
--   [Livro da Curso-R (Curso-R)](https://livro.curso-r.com/)
--   [Tidyverse (Wickham H)](https://www.tidyverse.org/)
--   [R for Data Science (Wickham H)](https://r4ds.had.co.nz/)
--   [Advanced R (Wickham H)](https://adv-r.hadley.nz/)
 
 #### Machine Learning
 
@@ -55,6 +46,13 @@ Fora do horário de aula ou monitoria:
 -   [Feature Engineering and Selection: A Practical Approach for
     Predictive Models (Kuhn, Kjell)](http://www.feat.engineering/)
 -   [Kaggle](https://www.kaggle.com/)
+
+#### Programação em R
+
+-   [Livro da Curso-R (Curso-R)](https://livro.curso-r.com/)
+-   [Tidyverse (Wickham H)](https://www.tidyverse.org/)
+-   [R for Data Science (Wickham H)](https://r4ds.had.co.nz/)
+-   [Advanced R (Wickham H)](https://adv-r.hadley.nz/)
 
 #### Miscelânea
 
