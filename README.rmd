@@ -22,10 +22,6 @@ install.packages("usethis")
 usethis::create_project("introml202108")
 ```
 
-## Referências do curso
-
-[Clique aqui para baixar o material do curso.](https://github.com/curso-r/202108-intro-ml/archive/refs/heads/master.zip)
-
 ## Dúvidas
 
 Fora do horário de aula ou monitoria:
