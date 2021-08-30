@@ -19,7 +19,7 @@ hitters_test <- testing(hitters_initial_split)
 # Dataprep ----------------------------------------------------------------
 
 hitters_recipe <- recipe(Salary ~ ., data = hitters_train) %>%
-  step_naomit(everything()) %>%
+  step_naomit(everything(), skip = TRUE) %>%
   step_rm(all_nominal()) %>%
   step_normalize(all_numeric_predictors())
 
