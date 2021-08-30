@@ -1458,10 +1458,7 @@ df %>%
 
 No exemplo da regressão linear, haverá um valor $\lambda$ que chamaremos de "hiperparâmetro" da regressão. Iremos chutar diferentes valores de $\lambda$ até encontrar a melhor $f(x)$.
 
-
 ---
-
-
 
 ## Regularização - LASSO
 
@@ -1478,8 +1475,6 @@ Ou seja, **penalizamos** a função de custo se os $\beta's$ forem muito grandes
 **PS1:** O $\color{red}{\lambda}$ é um **hiperparâmetro** da Regressão Linear.
 
 **PS2:** Quanto maior o $\color{red}{\lambda}$, mais penalizamos os $\beta's$ por serem grandes.
-
-
 
 ---
 
@@ -1499,7 +1494,7 @@ Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Lear
 
 ## Regularização - LASSO
 
-Existe um $\color{red}{\lambda}$ que retorna o menor erro de cross-validation.
+Vamos testar diversos valores para $\color{red}{\lambda}$ até encontrar o que dá o menor erro de teste.
 
 
 ![scatter_eqm](static/img/lasso_lambda.png)
@@ -1507,8 +1502,6 @@ Existe um $\color{red}{\lambda}$ que retorna o menor erro de cross-validation.
 .footnote[
 Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 219 (The LASSO).
 ]
-
-
 
 
 ---
@@ -1535,7 +1528,9 @@ linear_reg(penalty = tune())
 ---
 
 
-problema: teremos que testar muitos 'lambdas'. Podemos desgastar a base de teste (erro de teste vai ter alta variabilidade). Para isso, inventaram a estratégia de reamostragem que oferece uma estimativa do erro de predição (erro de teste) com menor variabilidade.
+## Problema!
+
+Teremos que testar muitos 'lambdas'. Podemos desgastar a base de teste (erro de teste vai ter alta variabilidade). Para isso, inventaram a estratégia de reamostragem que oferece uma estimativa do erro de predição (erro de teste) com menor variabilidade.
 
 
 ---
@@ -1561,11 +1556,7 @@ problema: teremos que testar muitos 'lambdas'. Podemos desgastar a base de teste
 .pull-right[
 <img src="static/img/k-fold-cv.png">
 
-
----------------------------------> linhas
 ]
-
-
 
 ---
 
@@ -1608,9 +1599,25 @@ ERRO DE VALIDAÇÃO CRUZADA: $$RMSE_{cv} = \frac{1}{5}\sum_{i=1}^{5}RMSE_{Fold_i
 Fonte: [bookdown.org/max/FES/resampling.html](https://bookdown.org/max/FES/resampling.html)
 ]
 
+---
+class: middle, center
 
+## Exemplo 03
 
+---
 
+## Regularização - Ridge
+
+No LASSO, usamos o módulo dos betas para fazer a regularização.
+É possível fazer também usando o quadrado dos coeficientes:
+
+$$RMSE_{Ridge} = RMSE + \color{red}{\lambda}\sum_{j = 1}^{p}\beta_j^2$$
+
+Também é possível misturar os dois
+
+$$RMSE_{regularizado} = RMSE + (\alpha) \times \color{red}{\lambda}\sum_{j = 1}^{p}|\beta_j| + (1 - \alpha) \times \color{red}{\lambda}\sum_{j = 1}^{p}\beta_j^2$$
+
+Nessa definição $\alpha$ é chamado de 'mixture' (mistura). Quando $\alpha=1$ temos o LASSO e quando $\alpha=0$ temos Ridge. O $\alpha$ também pode ser tunado.
 
 ---
 
