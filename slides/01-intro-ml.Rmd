@@ -1202,6 +1202,10 @@ Colocamos um $\hat{}$ em cima dos termos para representar "estimativas". Ou seja
 # seria a distância dist esperada?
 ```
 
+---
+class: middle, center
+
+## Exemplo 01
 
 ---
 
@@ -1403,6 +1407,11 @@ initial_split(dados, prop=3/4)
 <img src="static/img/erro_treino_erro_teste.png" width = "400px">
 
 ]
+
+---
+class: middle, center
+
+## Exemplo 02
 
 ---
 
