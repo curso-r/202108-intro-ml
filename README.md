@@ -59,7 +59,7 @@ Fora do horário de aula ou monitoria:
 #### Machine Learning
 
 -   [Introduction to Statistical Learning (Hastie, et
-    al)](http://faculty.marshall.usc.edu/gareth-james/ISL/ISLR%20Seventh%20Printing.pdf)
+    al)](https://web.stanford.edu/~hastie/ISLRv2_website.pdf)
 -   [Elements of Statistical Learning (Hastie, et
     al)](https://web.stanford.edu/~hastie/Papers/ESLII.pdf)
 -   [Computer Age Statistical Inference (Hastie,
