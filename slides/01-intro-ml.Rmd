@@ -36,7 +36,7 @@ options(htmltools.dir.version = FALSE)
 # Referências
 
 .pull-left[
-<a href = "https://static1.squarespace.com/static/5ff2adbe3fe4fe33db902812/t/6062a083acbfe82c7195b27d/1617076404560/ISLR%2BSeventh%2BPrinting.pdf">
+<a href = "https://web.stanford.edu/~hastie/ISLRv2_website.pdf">
 <img src="static/img/islr.png" style=" display: block; margin-left: auto; margin-right: auto;"></img>
 </a>
 ]
