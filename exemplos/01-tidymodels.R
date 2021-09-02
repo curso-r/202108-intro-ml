@@ -8,10 +8,10 @@ library(tidymodels)
 data("diamonds")
 
 # EDA ---------------------------------------------------------------------
-# glimpse(diamonds)
-# skim(diamonds)
-# GGally::ggpairs(diamonds %>% sample_n(2000))
-# qplot(x, price, data = diamonds)
+glimpse(diamonds)
+skim(diamonds)
+GGally::ggpairs(diamonds %>% sample_n(2000))
+qplot(x, price, data = diamonds)
 
 # Precisamos passar pro R:
 # 1. A f que queremos usar
@@ -56,6 +56,7 @@ diamonds_com_previsao <- diamonds %>%
 # Pontos observados + curva da f
 diamonds_com_previsao %>%
   filter(x > 0) %>%
+  sample_n(1000) %>%
   ggplot() +
   geom_point(aes(x, price), alpha = 0.3) +
   geom_point(aes(x, .pred), color = "red") +
@@ -75,9 +76,6 @@ library(yardstick)
 
 # Métricas de erro
 diamonds_com_previsao %>% rmse(truth = price, estimate = .pred)
-
-# residuo = truth-estimate
-
 diamonds_com_previsao %>% mae(truth = price, estimate = .pred)
 diamonds_com_previsao %>% rsq(truth = price, estimate = .pred)
 
