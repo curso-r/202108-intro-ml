@@ -54,6 +54,8 @@ Fora do horário de aula ou monitoria:
 | 00-intro-curso.html         | <https://curso-r.github.io/202108-intro-ml/slides/00-intro-curso.html>         |
 | 01-intro-ml.html            | <https://curso-r.github.io/202108-intro-ml/slides/01-intro-ml.html>            |
 | 02-intro-classificacao.html | <https://curso-r.github.io/202108-intro-ml/slides/02-intro-classificacao.html> |
+| 03-dataprep-pt2.html        | <https://curso-r.github.io/202108-intro-ml/slides/03-dataprep-pt2.html>        |
+| 03-modelos-de-arvores.html  | <https://curso-r.github.io/202108-intro-ml/slides/03-modelos-de-arvores.html>  |
 
 ## Referências externas
 
