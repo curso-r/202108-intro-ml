@@ -38,26 +38,41 @@ cp
 
 
 # exemplo 2) credit data --------------------------------------------------
+# remotes::install_github("grantmcdermott/parttree")
+library(parttree)
 data("credit_data")
 help(credit_data)
-credit_data <- credit_data %>% na.omit()
+credit_data <- credit_data
 
 credit_tree_model <- decision_tree(
   min_n = 1,
-  tree_depth =4,
+  tree_depth = 7,
   cost_complexity = -0.000001
 ) %>%
   set_mode("classification")
 
+credit_tree_recipe <- recipe(Status ~ Seniority + Income, data = credit_data)
+
+credit_tree_wf <- workflow() %>%
+  add_model(credit_tree_model) %>%
+  add_recipe(credit_tree_recipe)
+
 credit_tree_fit <- fit(
-  credit_tree_model,
-  Status ~.,
+  credit_tree_wf,
   data = credit_data
 )
 
-rpart.plot(credit_tree_fit$fit, roundint=FALSE)
+credit_tree_mod <- extract_fit_engine(credit_tree_fit)
+rpart.plot(credit_tree_mod, roundint=FALSE)
+vip::vip(credit_tree_mod)
 
-cp <- as.data.frame(credit_tree_fit$fit$cptable)
+credit_data %>%
+  ggplot(aes(x = Seniority, y = Income)) +
+  geom_parttree(data = credit_tree_fit, aes(fill = Status), alpha = 0.3) +
+  geom_point(aes(col = Status)) +
+  theme_minimal()
+
+cp <- as.data.frame(credit_tree_mod$cptable)
 cp
 
-vip::vip(credit_tree_fit$fit)
+
