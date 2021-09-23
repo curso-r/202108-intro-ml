@@ -1,4 +1,7 @@
 library(tree)
+library(magrittr)
+library(ggplot2)
+library(tidyverse)
 x <- runif(100, -1, 1)
 y <- sin(x*3) + rnorm(100, sd = 0.1)
 
