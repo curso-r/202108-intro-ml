@@ -63,3 +63,11 @@ show_query(predicoes)
 #                    case_when(dose >= 14 ~ 0.464643508, (dose < 5 | is.na(dose)) & (dose < 14 | is.na(dose)) ~ 0.464643508,
 #                              dose >= 5 & (dose < 14 | is.na(dose)) ~ -0.464643508)))
 
+
+# 0 + case_when(dose >= 14 ~ -0.150000006,
+#               (dose < 5 | is.na(dose)) & (dose < 14 | is.na(dose)) ~ -0.150000006,
+#               dose >= 5 & (dose < 14 | is.na(dose)) ~ 0.150000006) +
+#   case_when(dose >= 14 ~ -0.105000004,
+#             (dose < 5 | is.na(dose)) & (dose < 14 | is.na(dose)) ~ -0.105000004,
+#             dose >= 5 & (dose < 14 | is.na(dose)) ~ 0.105000012) +
+#   0.5
