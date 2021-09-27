@@ -1,14 +1,25 @@
 library(dplyr)
 library(archive)
 
-# https://www.kaggle.com/c/ga-customer-revenue-prediction/data
+# Read --------------------------------------------------------------------
 
-con <- archive::archive_read("ga-customer-revenue-prediction.zip", "train_v2.csv")
-x <- readr::read_csv(con)
+# base full: https://storage.googleapis.com/deep-learning-com-r/ga-customer-revenue-prediction.zip
 
-visitors <- x %>% distinct(fullVisitorId)
-totals <- jsonlite::stream_in(textConnection(x$totals))
-totals$fullVisitorId <- x$fullVisitorId
+# usamos o archive p/ não precisar des-compactar
+train <- readr::read_csv(unz("ga-customer-revenue-prediction.zip", "train_v2.csv"))
+test <- readr::read_csv(unz("ga-customer-revenue-prediction.zip", "test_v2.csv"))
+
+full <- bind_rows(
+  train %>% mutate(split = "train"),
+  test %>% mutate(split = "test")
+)
+
+
+
+# Comprou vs nao comprou --------------------------------------------------
+
+totals <- jsonlite::stream_in(textConnection(full$totals))
+totals$fullVisitorId <- full$fullVisitorId
 totals$totalTransactionRevenue <- readr::parse_number(totals$totalTransactionRevenue)
 totals$transactionRevenue <- readr::parse_number(totals$transactionRevenue)
 summary(totals$transactionRevenue)
@@ -19,13 +30,16 @@ compraram <- totals %>%
 
 nao_compraram <- totals %>%
   filter(is.na(totalTransactionRevenue)) %>%
-  distinct(fullVisitorId) %>%
-  sample_n(2 * nrow(compraram))
+  distinct(fullVisitorId) #%>%
+#sample_n(2 * nrow(compraram))
 
 selecionados <- bind_rows(compraram, nao_compraram)
 
-visitas_selecionados <- x %>%
+visitas_selecionados <- full %>%
   filter(fullVisitorId %in% selecionados$fullVisitorId)
+
+
+# Arrumar colunas de json -------------------------------------------------
 
 totals_cols <- jsonlite::stream_in(textConnection(visitas_selecionados$totals)) %>%
   mutate(across(everything(), readr::parse_number))
@@ -47,8 +61,13 @@ traffic_cols <- jsonlite::stream_in(textConnection(visitas_selecionados$trafficS
 geo_cols <- jsonlite::stream_in(textConnection(visitas_selecionados$geoNetwork)) %>%
   select(-latitude, -longitude, -networkLocation, -cityId)
 
+
+# Juntar tudo e salvar ----------------------------------------------------
+
 v <- visitas_selecionados %>%
   select(-customDimensions, -device, -hits, -totals, -trafficSource, -geoNetwork) %>%
   bind_cols(totals_cols, geo_cols, device_cols, traffic_cols)
 
 saveRDS(v, "ga-crp-train.rds")
+
+# base 'arrumadinha': https://storage.googleapis.com/deep-learning-com-r/ga-crp-train.rds

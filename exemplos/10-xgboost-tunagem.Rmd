@@ -9,7 +9,6 @@ library(tidyverse) # metapackage of all tidyverse packages
 library(tidymodels)
 library(GGally)
 # library(doParallel)
-cores = 4
 ```
 
 ```{r cars}
@@ -68,6 +67,17 @@ contagens %>%
   geom_label(aes(label = n), position = position_fill(vjust = 0.5)) +
   facet_wrap(~variavel, scales = "free_y", ncol = 3) +
   ggtitle("Churn vs. Variáveis Categóricas")
+
+
+library(DataExplorer)
+library(esquisse)
+
+telco_train$Contract
+
+
+step_corr()
+step_lincomb()
+
 ```
 
 ```{r, fig.height=8}
@@ -81,7 +91,6 @@ telco_train %>%
   ggtitle("Churn vs. Variáveis Numéricas")
 ```
 
-
 ```{r, fig.height=8}
 telco_train %>% 
   select(c(where(is.numeric), Churn)) %>%
@@ -93,7 +102,7 @@ telco_train %>%
        subtitle = "Distribuição Acumulada")
 ```
 
-```{r, fig.height=13}
+```{r, fig.height=13, fig.width=8}
 grafico_de_barras_das_vars_continuas <- function(dados) {
   dados %>% 
     select(c(where(is.numeric), Churn)) %>%
@@ -113,17 +122,14 @@ grafico_de_barras_das_vars_continuas <- function(dados) {
 grafico_de_barras_das_vars_continuas(telco_train)
 ```
 
-
-
 ## Pré-processamento
 
 ```{r}
 telco_recipe <- recipe(Churn ~ ., telco_train) %>% 
   step_corr(all_numeric_predictors()) %>%
   step_impute_mean(TotalCharges) %>% 
-  step_dummy(all_nominal_predictors())
+  step_dummy(all_nominal_predictors(), one_hot = TRUE)
 ```
-
 
 ```{r}
 telco_recipe
@@ -133,7 +139,6 @@ recipe_preparada
 
 bake(recipe_preparada, new_data = telco_test) %>% glimpse()
 ```
-
 
 ## Definição da Validação Cruzada
 
@@ -148,19 +153,20 @@ telco_resamples
 
 Achar uma combinação `learning_rate` e `trees` que funciona relativamente bem. Usando uma learning_rate alta. Vamos fixar os valores dos outros parâmetros.
 
-- `min_n`: usar um valor entre 1 e 30 é razoável no começo.
-- `max_depth`: geralmente começamos com algo entre 4 e 6.
-- `loss_reduction`: vamos começar com 0, geralmente começamos com valores baixos.
-- `mtry`: começamos com +- 80% do número de colunas na base.
-- `sample_size`: também fazemos approx 80% do número de linhas.
+-   `min_n`: usar um valor entre 1 e 30 é razoável no começo.
+-   `max_depth`: geralmente começamos com algo entre 4 e 6.
+-   `loss_reduction`: vamos começar com 0, geralmente começamos com valores baixos.
+-   `mtry`: começamos com +- 80% do número de colunas na base.
+-   `sample_size`: também fazemos approx 80% do número de linhas.
 
 Em seguida vamos tunar o `learn_rate` e `trees` em um grid assim:
 
-- `learn_rate` - 0.05, 0.1, 0.3
-- `trees` - 100, 500, 1000, 1500
+-   `learn_rate` - 0.05, 0.1, 0.3
+-   `trees` - 100, 500, 1000, 1500
 
 ```{r}
 
+cores = 4
 telco_model <- boost_tree(
   mtry = 0.8, 
   trees = tune(), # <---------------
@@ -213,18 +219,17 @@ telco_select_best_passo1 <- telco_tune_grid %>%
 telco_select_best_passo1
 ```
 
-
 ### Passo 2:
 
 Vimos que com os parâmetros da árvore fixos:
 
-- `trees` = `r telco_select_best_passo1$trees`
-- `learn_rate` = `r telco_select_best_passo1$learn_rate`
+-   `trees` = `r telco_select_best_passo1$trees`
+-   `learn_rate` = `r telco_select_best_passo1$learn_rate`
 
 São bons valores inciais. Agora, podemos tunar os parâmetros relacionados à árvore.
 
-- `tree_depth`: vamos deixar ele variar entre 3 e 10.
-- `min_n`: vamos deixar variar entre 5 e 90.
+-   `tree_depth`: vamos deixar ele variar entre 3 e 10.
+-   `min_n`: vamos deixar variar entre 5 e 90.
 
 Os demais deixamos fixos como anteriormente.
 
@@ -272,15 +277,14 @@ telco_select_best_passo2
 
 Agora temos definidos:
 
-- `trees` = `r telco_select_best_passo1$trees`
-- `learn_rate` = `r telco_select_best_passo1$learn_rate`
-- `min_n` = `r telco_select_best_passo2$min_n`
-- `tree_depth` = `r telco_select_best_passo2$tree_depth`
+-   `trees` = `r telco_select_best_passo1$trees`
+-   `learn_rate` = `r telco_select_best_passo1$learn_rate`
+-   `min_n` = `r telco_select_best_passo2$min_n`
+-   `tree_depth` = `r telco_select_best_passo2$tree_depth`
 
 Vamos então tunar o `loss_reduction`:
 
 `loss_reduction`: vamos deixar ele variar entre 0 e 2
-
 
 ```{r,  cache=TRUE}
 telco_model <- boost_tree(
@@ -324,17 +328,16 @@ telco_select_best_passo3
 
 Não parece que o `lossreduction` teve tanto efeito, mas, vamos usar `r telco_select_best_passo3$loss_reduction` que deu o melhor resultado. Até agora temos definido:
 
+-   `trees` = `r telco_select_best_passo1$trees`
+-   `learn_rate` = `r telco_select_best_passo1$learn_rate`
+-   `min_n` = `r telco_select_best_passo2$min_n`
+-   `tree_depth` = `r telco_select_best_passo2$tree_depth`
+-   `lossreduction` = `r telco_select_best_passo3$loss_reduction`
 
-- `trees` = `r telco_select_best_passo1$trees`
-- `learn_rate` = `r telco_select_best_passo1$learn_rate`
-- `min_n` = `r telco_select_best_passo2$min_n`
-- `tree_depth` = `r telco_select_best_passo2$tree_depth`
-- `lossreduction` = `r telco_select_best_passo3$loss_reduction`
+Vamos então tunar o `mtry` e o `sample_size`:
 
-Vamos então tunar o `mtry` e o `sample_size`: 
-
-- `mtry`: de 10% a 100%
-- `sample_size`: de 50% a 100%
+-   `mtry`: de 10% a 100%
+-   `sample_size`: de 50% a 100%
 
 ```{r}
 telco_model <- boost_tree(
@@ -375,14 +378,12 @@ telco_select_best_passo4 <- telco_tune_grid %>% select_best(metric = "roc_auc")
 telco_select_best_passo4
 ```
 
-
-
 ### Passo 5:
 
 Vimos que a melhor combinação foi
 
-- `mtry` = `r telco_select_best_passo4$mtry`
-- `sample_size` = `r telco_select_best_passo4$sample_size`
+-   `mtry` = `r telco_select_best_passo4$mtry`
+-   `sample_size` = `r telco_select_best_passo4$sample_size`
 
 Agora vamos tunar o `learn_rate` e o `trees` de novo, mas deixando o `learn_rate` assumir valores menores.
 
@@ -398,6 +399,10 @@ telco_model <- boost_tree(
 ) %>% 
   set_mode("classification") %>%
   set_engine("xgboost", nthread = cores, counts = FALSE)
+
+grid_regular()
+grid_random()
+tune_bayes()
 
 #### Workflow
 telco_wf <- workflow() %>% 
@@ -424,7 +429,6 @@ telco_tune_grid %>% show_best(metric = "roc_auc", n = 5)
 telco_select_best_passo5 <- telco_tune_grid %>% select_best(metric = "roc_auc")
 telco_select_best_passo5
 ```
-
 
 ## Desempenho do Modelo Final
 
@@ -470,18 +474,15 @@ telco_last_fit %>%
 
 ```
 
-
 ## MODELO FINAL FINAL
 
 ```{r}
 telco_modelo_final <- telco_wf %>% fit(telco)
 
-
 saveRDS(telco_modelo_final, "telco_modelo_final.rds")
 
 predict(telco_modelo_final, new_data = telco_test, type="prob") %>%
   arrange(desc(.pred_Yes))
-
 
 table(
   predict(telco_modelo_final, new_data = telco_test, type="prob")$.pred_Yes > 0.5,
@@ -489,4 +490,3 @@ table(
 )
 
 ```
-
