@@ -6,20 +6,14 @@ library(archive)
 # base full: https://storage.googleapis.com/deep-learning-com-r/ga-customer-revenue-prediction.zip
 
 # usamos o archive p/ não precisar des-compactar
-train <- readr::read_csv(unz("ga-customer-revenue-prediction.zip", "train_v2.csv"))
-test <- readr::read_csv(unz("ga-customer-revenue-prediction.zip", "test_v2.csv"))
-
-full <- bind_rows(
-  train %>% mutate(split = "train"),
-  test %>% mutate(split = "test")
-)
-
+con <- archive::archive_read("ga-customer-revenue-prediction.zip", "train_v2.csv")
+x <- readr::read_csv(con)
 
 
 # Comprou vs nao comprou --------------------------------------------------
 
-totals <- jsonlite::stream_in(textConnection(full$totals))
-totals$fullVisitorId <- full$fullVisitorId
+totals <- jsonlite::stream_in(textConnection(x$totals))
+totals$fullVisitorId <- x$fullVisitorId
 totals$totalTransactionRevenue <- readr::parse_number(totals$totalTransactionRevenue)
 totals$transactionRevenue <- readr::parse_number(totals$transactionRevenue)
 summary(totals$transactionRevenue)
@@ -35,7 +29,7 @@ nao_compraram <- totals %>%
 
 selecionados <- bind_rows(compraram, nao_compraram)
 
-visitas_selecionados <- full %>%
+visitas_selecionados <- x %>%
   filter(fullVisitorId %in% selecionados$fullVisitorId)
 
 
