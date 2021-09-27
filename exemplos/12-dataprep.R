@@ -39,11 +39,12 @@ gera_features_de_x_semanas_atras <- function(data, month, n_semanas_atras = 4) {
   month <- ymd(month)
 
   fatures_de_quatro_semanas_atras <- data %>%
-    filter(date < semana, date > (month - weeks(n_semanas_atras)))  %>%
+    dtplyr::lazy_dt() %>%
+    filter(date < month, date > (month - weeks(n_semanas_atras)))  %>%
     group_by(fullVisitorId) %>%
     summarise(
       last_channel_grouping = last(channelGrouping),
-      last_ses_from_the_period_end = semana - max(date),
+      last_ses_from_the_period_end = month - max(date),
       interval_dates = max(date) - min(date),
       unique_date_num = length(unique(date)),
       max_visit_num = max(visitNumber, na.rm = TRUE),
@@ -64,7 +65,8 @@ gera_features_de_x_semanas_atras <- function(data, month, n_semanas_atras = 4) {
       session_cnt = n(),
       totalTransactionRevenue = sum(totalTransactionRevenue),
       transactions  = sum(transactions,na.rm = TRUE)
-    )
+    ) %>%
+    as_tibble()
 
   return(fatures_de_quatro_semanas_atras)
 }
@@ -72,14 +74,13 @@ gera_features_de_x_semanas_atras <- function(data, month, n_semanas_atras = 4) {
 # amostra sistematica de 4 em 4 semanas para fins meramente computacionais.
 library(purrr)
 library(furrr)
-plan(multisession, workers = 2)
+plan(multisession, workers = 7)
 historico <- resposta %>%
   ungroup() %>%
   distinct(month) %>%
-  filter(row_number() %% 2 == 0) %>%
-  slice(1:2) %>%
+  #filter(row_number() %% 2 == 0) %>%
   mutate(
-    features = future_map(month, gera_features_de_x_semanas_atras, data = ga_transactions)
+    features = future_map(month, gera_features_de_x_semanas_atras, data = ga_transactions, .progress = TRUE)
   )
 plan(sequential)
 
@@ -87,6 +88,19 @@ ga_full <- historico %>%
   unnest(features) %>%
   left_join(resposta, by = c("month", "fullVisitorId"))
 
+ga_full <- ga_full %>%
+  mutate(comprou = factor(if_else(target > 0, "sim", "não", "não"))) %>%
+  select(-target)
 
-ga_dataset <- ga_full %>% filter(month < "2018-03-01")
+ga_full <- ga_full %>%
+  mutate(
+    last_ses_from_the_period_end = as.numeric(last_ses_from_the_period_end),
+    interval_dates = as.numeric(interval_dates)
+  )
+
+ga_train <- ga_full %>% filter(month < "2018-03-01")
 ga_test <- ga_full %>% filter(month >= "2018-03-01")
+
+readr::write_csv(ga_train, "ga_train.csv")
+readr::write_csv(ga_test, "ga_test_gabarito.csv")
+readr::write_csv(ga_test %>% select(-comprou), "ga_test.csv")
